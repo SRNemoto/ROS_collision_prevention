@@ -15,7 +15,7 @@ std::string output_vel_topic("cmd_vel");
 
 const float ROBOT_RADIUS = 0.15; // meters
 
-const float MIN_DISTANCE = 0.1; //meters
+const float MIN_DISTANCE = 0.5; //meters
 
 const float MIN_LASER_READING = ROBOT_RADIUS + MIN_DISTANCE; // minimum lidar reading in meters
 
