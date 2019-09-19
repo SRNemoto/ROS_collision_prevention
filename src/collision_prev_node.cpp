@@ -4,6 +4,7 @@
 #include "sensor_msgs/LaserScan.h"
 #include "collision_prev_package/constants.h"
 #include <typeinfo>
+#include <stdio.h>
 
 #include <stdlib.h>
 
@@ -42,18 +43,31 @@ void ReadLaser(const sensor_msgs::LaserScan& msg)
  */
 int main(int argc, char **argv)
 {
-    std::string robot_name("Robot0");
+    std::string robot_name("robot0");
+
+    // Initialize ROS
+    ros::init(argc, argv, robot_name + "_collsion_prevention");    
+
+    // Debugging
+    // for (int i = 0; i < argc; i++) {
+    //     printf("Arg%d: %s\n", i, argv[i]);
+    // }
+
     int opt;
-    while ((opt = getopt(argc, (argv), "nld:")) != -1) {
+    char *test = NULL;
+    while ((opt = getopt(argc, argv, "nld:")) != -1) {
         switch(opt) {
             case 'n':
-                robot_name = optarg;
+                // printf("n found: \n    optarg: %s\n    optind: %d\n    opterr: %d\n    optopt: %d\n", optarg, optind, opterr, optopt);
+                robot_name = optarg? optarg : argv[optind];
                 break;
             case 'l':
-                laser_topic = optarg;
+                // printf("l found: \n    optarg: %s\n    optind: %d\n    opterr: %d\n    optopt: %d\n", optarg, optind, opterr, optopt);
+                laser_topic = optarg? optarg : argv[optind];
                 break;
             case 'd':
-                input_vel_topic = optarg;
+                // printf("d found: \n    optarg: %s\n    optind: %d\n    opterr: %d\n    optopt: %d\n", optarg, optind, opterr, optopt);
+                input_vel_topic = optarg? optarg : argv[optind];
                 break;
             default:
                 printf("The -%c is not a recognized parameter\n", opt);
@@ -61,24 +75,24 @@ int main(int argc, char **argv)
         }
     }
 
-    // Initialize ROS
-    ros::init(argc, argv, robot_name + "_collsion_prevention");    
-
     // Create Access point to communications to ROS
     ros::NodeHandle n;
 
     // To get correct scope additions
     robot_name += "/";
 
-    ROS_INFO("Subscribing to '%s' for lasers", robot_name + laser_topic);
+    std::cout << "Subscribing to " << robot_name + laser_topic << " for lasers\n";
+
+    //ROS_INFO("Subscribing to '%s' for lasers", robot_name + laser_topic);
     // Tell ROS this node will subscribe to robot's laser target
     ros::Subscriber laser_subscriber = n.subscribe(robot_name + laser_topic, 1000, ReadLaser);
 
-    ROS_INFO("Subscribing to '%s' for input velocity", robot_name + input_vel_topic);
+    std::cout << "Subscribing to " << robot_name + input_vel_topic << " for input velocity\n";
+    //ROS_INFO("Subscribing to '%s' for input velocity", robot_name + input_vel_topic);
     // Tell ROS this node will subscribe to desired velocity topic
     ros::Subscriber vel_subscriber = n.subscribe(robot_name + input_vel_topic, 1000, AdjustVelocity);
 
-    ROS_INFO("Publishing to '%s' for output velocity", robot_name + output_vel_topic);
+    //ROS_INFO("Publishing to '%s' for output velocity", robot_name + output_vel_topic);
     // Tell ROS this node will publish to robot's output topic
     ros::Publisher vel_publisher = n.advertise<geometry_msgs::Twist>(robot_name + output_vel_topic, 1000);
 
