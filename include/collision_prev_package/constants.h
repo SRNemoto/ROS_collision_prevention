@@ -5,6 +5,8 @@
 #include <string>
 #include <math.h>
 
+// I lied some of these strings will change. Whoops
+
 std::string laser_topic("laser_1");
 
 // Default input velocity topic name "des_vel"

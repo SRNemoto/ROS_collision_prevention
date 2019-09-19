@@ -44,10 +44,16 @@ int main(int argc, char **argv)
 {
     std::string robot_name("Robot0");
     int opt;
-    while ((opt = getopt(argc, (argv), "n:")) != -1) {
+    while ((opt = getopt(argc, (argv), "nld:")) != -1) {
         switch(opt) {
             case 'n':
                 robot_name = optarg;
+                break;
+            case 'l':
+                laser_topic = optarg;
+                break;
+            case 'd':
+                input_vel_topic = optarg;
                 break;
             default:
                 printf("The -%c is not a recognized parameter\n", opt);
