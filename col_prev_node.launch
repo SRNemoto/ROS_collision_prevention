@@ -1,0 +1,4 @@
+<launch>
+    <arg name="n" default="robot0"/>
+    <node name="col_prev_node" pkg="collsion_prev_package" type="collision_prev_node" args="-n $(arg n)" />
+</launch>
